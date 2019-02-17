@@ -9,17 +9,17 @@ def load_words():
     return [word.strip() for word in words]
 
 
-def calc_word_value():
+def calc_word_value(w):
     """Calculate the value of the word entered into function
     using imported constant mapping LETTER_SCORES"""
-    pass
+    return sum([LETTER_SCORES[l.upper()] for l in w if l != '-'])
 
 
-def max_word_value():
+def max_word_value(words=load_words()):
     """Calculate the word with the max value, can receive a list
     of words as arg, if none provided uses default DICTIONARY"""
-    pass
+    return sorted(words, key=lambda w: calc_word_value(w), reverse=True)[0]
 
 
 if __name__ == "__main__":
-    load_words()  # run unittests to validate
+    pass  # run unittests to validate
