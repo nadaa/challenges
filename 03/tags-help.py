@@ -1,6 +1,6 @@
 from collections import Counter
 from difflib import SequenceMatcher
-from itertools import product
+from itertools import product, combinations
 import re
 
 IDENTICAL = 1.0
@@ -12,15 +12,19 @@ TAG_HTML = re.compile(r'<category>([^<]+)</category>')
 
 def get_tags():
     """Find all tags (TAG_HTML) in RSS_FEED.
-    Replace dash with whitespace.
+    Replace dash with whitespace. why?
     Hint: use TAG_HTML.findall"""
-    pass
+    with open('rss.xml') as f:
+        tagsstr = f.read()
+    tagslist = TAG_HTML.findall(tagsstr)
+    return [t.replace('-', ' ') for t in tagslist]
 
 
 def get_top_tags(tags):
     """Get the TOP_NUMBER of most common tags
     Hint: use most_common method of Counter (already imported)"""
-    pass
+    cnt = Counter(tags)
+    return cnt.most_common(TOP_NUMBER)
 
 
 def get_similarities(tags):
@@ -28,7 +32,14 @@ def get_similarities(tags):
     Hint 1: compare each tag, use for in for, or product from itertools (already imported)
     Hint 2: use SequenceMatcher (imported) to calculate the similarity ratio
     Bonus: for performance gain compare the first char of each tag in pair and continue if not the same"""
-    pass
+    similar_tags = []
+    tag_pairs = list(combinations(set(tags), r=2))
+    for tag_pair in tag_pairs:
+        sim = SequenceMatcher(
+            isjunk=None, a=tag_pair[0], b=tag_pair[1]).ratio()
+        if sim > SIMILAR:
+            similar_tags.append(tag_pair)
+    return similar_tags
 
 
 if __name__ == "__main__":
